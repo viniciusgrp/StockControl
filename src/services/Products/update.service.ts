@@ -6,7 +6,7 @@ import { IProduct } from "../../interfaces/product.interface";
 export const updateProductService = async (data: IProduct, id: number) => {
     const productRepository = AppDataSource.getRepository(Product)
 
-    const product = productRepository.findOneBy({ id: id })
+    const product = await productRepository.findOneBy({ id: id })
     
     if (!product) {
         throw new AppError("Product ID not find", 404)
