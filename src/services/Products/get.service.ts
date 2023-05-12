@@ -2,8 +2,14 @@ import { Product } from "../../entities/products.entity";
 import { AppDataSource } from "../../data-source";
 import { IProduct } from "../../interfaces/product.interface";
 
-export const getProductsService = async (orderBy: any) => {
-  const productRepository = AppDataSource.getRepository(Product);
+export const getProductsService = async (
+  orderBy: any,
+  page: any = 1,
+  limit: any = 10
+) => {
+    const productRepository = AppDataSource.getRepository(Product);
+    
+    console.log("LIMITE", limit)
 
   let products: IProduct[] = [];
 
@@ -13,41 +19,58 @@ export const getProductsService = async (orderBy: any) => {
     case "name":
       products = await productRepository
         .createQueryBuilder("product")
+        .skip((page - 1) * limit)
+        .take(limit)
         .orderBy("product.name", "ASC")
         .getMany();
       break;
     case "-name":
       products = await productRepository
         .createQueryBuilder("product")
+        .skip((page - 1) * limit)
+        .take(limit)
         .orderBy("product.name", "DESC")
         .getMany();
       break;
     case "price":
       products = await productRepository
         .createQueryBuilder("product")
+        .skip((page - 1) * limit)
+        .take(limit)
         .orderBy("product.price", "ASC")
         .getMany();
       break;
     case "-price":
       products = await productRepository
         .createQueryBuilder("product")
+        .skip((page - 1) * limit)
+        .take(limit)
         .orderBy("product.price", "DESC")
         .getMany();
       break;
     case "quantityStock":
       products = await productRepository
         .createQueryBuilder("product")
+        .skip((page - 1) * limit)
+        .take(limit)
         .orderBy("product.quantityStock", "ASC")
         .getMany();
       break;
     case "-quantityStock":
       products = await productRepository
         .createQueryBuilder("product")
+        .skip((page - 1) * limit)
+        .take(limit)
         .orderBy("product.quantityStock", "DESC")
         .getMany();
       break;
     default:
-      products = await productRepository.find();
+        products = await productRepository
+        .createQueryBuilder("product")
+        .skip((page - 1) * limit)
+        .take(limit)
+        .getMany();
+      break;
   }
 
   return products;
