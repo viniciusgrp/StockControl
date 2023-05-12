@@ -1,6 +1,7 @@
 import { Product } from "../../entities/products.entity";
 import { AppDataSource } from "../../data-source";
 import { IProduct } from "../../interfaces/product.interface";
+import { AppError } from "../../errors/AppError";
 
 export const getProductsService = async (
   orderBy: any,
@@ -74,4 +75,19 @@ export const getProductsService = async (
   }
 
   return products;
+};
+
+
+export const getSpecificProductsService = async (
+  id: number,
+) => {
+    const productRepository = AppDataSource.getRepository(Product);
+   
+  const product = await productRepository.findOneBy({ id: id })
+  
+  if (!product) {
+    throw new AppError(`Product with the ID ${id} not found`, 404)
+  }
+
+  return product;
 };

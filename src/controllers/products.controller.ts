@@ -1,7 +1,7 @@
 import { updateProductService } from './../services/Products/update.service';
 import { Request, Response } from "express";
 import { createProductService } from "../services/Products/create.service";
-import { getProductsService } from "../services/Products/get.service";
+import { getProductsService, getSpecificProductsService } from "../services/Products/get.service";
 import { deleteProductService } from '../services/Products/delete.service';
 import { IProduct } from '../interfaces/product.interface';
 
@@ -36,5 +36,13 @@ export const deleteProductController = async (req: Request, res: Response) => {
 
     await deleteProductService(id)
 
-    return res.status(200)
+    return res.status(200).send()
+}
+
+export const getSpecificProductController = async (req: Request, res: Response) => {
+    const id = Number(req.params.id)
+
+    const product: IProduct = await getSpecificProductsService(id)
+
+    return res.status(200).json(product)
 }

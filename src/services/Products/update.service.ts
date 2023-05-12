@@ -9,7 +9,7 @@ export const updateProductService = async (data: IProduct, id: number) => {
     const product = await productRepository.findOneBy({ id: id })
     
     if (!product) {
-        throw new AppError("Product ID not find", 404)
+        throw new AppError(`Product with ID ${id} not find`, 404)
     }
 
     const productToUpdate = {
