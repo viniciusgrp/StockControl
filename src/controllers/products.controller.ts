@@ -14,7 +14,9 @@ export const createProductController = async (req: Request, res: Response) => {
 }
 
 export const getProductsController = async (req: Request, res: Response) => {
-    const products: IProduct[] = await getProductsService()
+    const { orderBy } = req.query
+
+    const products: IProduct[] = await getProductsService(orderBy)
 
     return res.status(200).json(products)
 }
