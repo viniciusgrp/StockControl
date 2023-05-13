@@ -1,9 +1,14 @@
 import { updateProductService } from './../services/Products/update.service';
 import { Request, Response } from "express";
 import { createProductService } from "../services/Products/create.service";
-import { getProductsService } from "../services/Products/get.service";
+import { getProductsService, getSpecificProductsService } from "../services/Products/get.service";
 import { deleteProductService } from '../services/Products/delete.service';
 import { IProduct } from '../interfaces/product.interface';
+
+interface IGetProducts {
+    products: IProduct[];
+    pages: number;
+}
 
 export const createProductController = async (req: Request, res: Response) => {
     const data: IProduct = req.body
@@ -14,7 +19,9 @@ export const createProductController = async (req: Request, res: Response) => {
 }
 
 export const getProductsController = async (req: Request, res: Response) => {
-    const products: IProduct[] = await getProductsService()
+    const { orderBy, page, limit, name } = req.query
+
+    const products: IGetProducts = await getProductsService(orderBy, page, limit, name)
 
     return res.status(200).json(products)
 }
@@ -34,5 +41,13 @@ export const deleteProductController = async (req: Request, res: Response) => {
 
     await deleteProductService(id)
 
-    return res.status(200)
+    return res.status(200).send()
+}
+
+export const getSpecificProductController = async (req: Request, res: Response) => {
+    const id = Number(req.params.id)
+
+    const product: IProduct = await getSpecificProductsService(id)
+
+    return res.status(200).json(product)
 }
