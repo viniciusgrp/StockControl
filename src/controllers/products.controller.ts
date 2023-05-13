@@ -5,6 +5,11 @@ import { getProductsService, getSpecificProductsService } from "../services/Prod
 import { deleteProductService } from '../services/Products/delete.service';
 import { IProduct } from '../interfaces/product.interface';
 
+interface IGetProducts {
+    products: IProduct[];
+    pages: number;
+}
+
 export const createProductController = async (req: Request, res: Response) => {
     const data: IProduct = req.body
 
@@ -16,7 +21,7 @@ export const createProductController = async (req: Request, res: Response) => {
 export const getProductsController = async (req: Request, res: Response) => {
     const { orderBy, page, limit, name } = req.query
 
-    const products: IProduct[] = await getProductsService(orderBy, page, limit, name)
+    const products: IGetProducts = await getProductsService(orderBy, page, limit, name)
 
     return res.status(200).json(products)
 }

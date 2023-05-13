@@ -17,15 +17,22 @@ export const getProductsService = async (
   const order = orderBy.replace("-","")
 
 
-  let products: IProduct[] = await productRepository
+  const products: IProduct[] = await productRepository
   .createQueryBuilder("product")
   .where("product.name ILIKE :name", { name: `%${name}%` })
   .skip((page - 1) * limit)
   .take(limit)
   .orderBy(`product.${order}`, `${ascOrDesc}`)
-  .getMany();
+    .getMany();
   
-  return products;
+  const found: number = await productRepository
+  .createQueryBuilder("product")
+  .where("product.name ILIKE :name", { name: `%${name}%` })
+    .getCount()
+  
+  const pages = Math.ceil(found / limit)
+  
+  return {products, pages};
 };
 
 export const getSpecificProductsService = async (id: number) => {
