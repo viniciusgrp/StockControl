@@ -4,89 +4,37 @@ import { IProduct } from "../../interfaces/product.interface";
 import { AppError } from "../../errors/AppError";
 
 export const getProductsService = async (
-  orderBy: any,
+  orderBy: any = 'id',
   page: any = 1,
-  limit: any = 10
+  limit: any = 10,
+  name: any = ""
 ) => {
-    const productRepository = AppDataSource.getRepository(Product);
-    
-    console.log("LIMITE", limit)
+  const productRepository = AppDataSource.getRepository(Product);
 
-  let products: IProduct[] = [];
+  const verifyOrder = orderBy.includes("-")
+  const ascOrDesc = verifyOrder ? "DESC" : "ASC"
 
-  console.log(orderBy);
+  const order = orderBy.replace("-","")
 
-  switch (orderBy) {
-    case "name":
-      products = await productRepository
-        .createQueryBuilder("product")
-        .skip((page - 1) * limit)
-        .take(limit)
-        .orderBy("product.name", "ASC")
-        .getMany();
-      break;
-    case "-name":
-      products = await productRepository
-        .createQueryBuilder("product")
-        .skip((page - 1) * limit)
-        .take(limit)
-        .orderBy("product.name", "DESC")
-        .getMany();
-      break;
-    case "price":
-      products = await productRepository
-        .createQueryBuilder("product")
-        .skip((page - 1) * limit)
-        .take(limit)
-        .orderBy("product.price", "ASC")
-        .getMany();
-      break;
-    case "-price":
-      products = await productRepository
-        .createQueryBuilder("product")
-        .skip((page - 1) * limit)
-        .take(limit)
-        .orderBy("product.price", "DESC")
-        .getMany();
-      break;
-    case "quantityStock":
-      products = await productRepository
-        .createQueryBuilder("product")
-        .skip((page - 1) * limit)
-        .take(limit)
-        .orderBy("product.quantityStock", "ASC")
-        .getMany();
-      break;
-    case "-quantityStock":
-      products = await productRepository
-        .createQueryBuilder("product")
-        .skip((page - 1) * limit)
-        .take(limit)
-        .orderBy("product.quantityStock", "DESC")
-        .getMany();
-      break;
-    default:
-        products = await productRepository
-        .createQueryBuilder("product")
-        .skip((page - 1) * limit)
-        .take(limit)
-        .getMany();
-      break;
-  }
 
+  let products: IProduct[] = await productRepository
+  .createQueryBuilder("product")
+  .where("product.name ILIKE :name", { name: `%${name}%` })
+  .skip((page - 1) * limit)
+  .take(limit)
+  .orderBy(`product.${order}`, `${ascOrDesc}`)
+  .getMany();
+  
   return products;
 };
 
+export const getSpecificProductsService = async (id: number) => {
+  const productRepository = AppDataSource.getRepository(Product);
 
-export const getSpecificProductsService = async (
-  id: number,
-) => {
-    const productRepository = AppDataSource.getRepository(Product);
-   
-  const product = await productRepository.findOneBy({ id: id })
-  
+  const product = await productRepository.findOneBy({ id: id });
+
   if (!product) {
-    throw new AppError(`Product with the ID ${id} not found`, 404)
+    throw new AppError(`Product with the ID ${id} not found`, 404);
   }
 
   return product;
