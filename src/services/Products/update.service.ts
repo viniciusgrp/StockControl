@@ -1,25 +1,25 @@
-import { Product } from "../../entities/products.entity"
-import { AppDataSource } from "../../data-source"
-import { AppError } from '../../errors/AppError';
+import { Product } from "../../entities/products.entity";
+import { AppDataSource } from "../../data-source";
+import { AppError } from "../../errors/AppError";
 import { IProduct } from "../../interfaces/product.interface";
 
 export const updateProductService = async (data: IProduct, id: number) => {
-    const productRepository = AppDataSource.getRepository(Product)
+  const productRepository = AppDataSource.getRepository(Product);
 
-    const product = await productRepository.findOneBy({ id: id })
-    
-    if (!product) {
-        throw new AppError(`Product with ID ${id} not find`, 404)
-    }
+  const product = await productRepository.findOneBy({ id: id });
 
-    const productToUpdate = {
-        ...product,
-        ...data
-    }
+  if (!product) {
+    throw new AppError(`Product with ID ${id} not find`, 404);
+  }
 
-    const updatedProduct = await productRepository.create(productToUpdate)
+  const productToUpdate = {
+    ...product,
+    ...data,
+  };
 
-    const response = await productRepository.save(updatedProduct)
+  const updatedProduct = await productRepository.create(productToUpdate);
 
-    return response
-}
+  const response = await productRepository.save(updatedProduct);
+
+  return response;
+};

@@ -1,16 +1,22 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
-@Entity('products')
+@Entity("products")
 export class Product {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column({type: 'float', scale: 2})
-    price: number;
+  @Column({ type: "float", scale: 2 })
+  price: number;
 
-    @Column()
-    quantityStock: number;
+  @Column()
+  quantityStock: number;
 }
