@@ -30,6 +30,7 @@ export const getProductsService = async (
   .where("product.name ILIKE :name", { name: `%${name}%` })
     .getCount()
   
+  
   const pages = Math.ceil(found / limit)
   
   return {products, pages};
