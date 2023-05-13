@@ -9,7 +9,7 @@ Link do deploy do Back End:
 https://stockcontrol.onrender.com/
 
 Tecnologias utilizadas:
-Node.Js, Express.Js, TypeScript, TypeORM, dotenv
+Node.Js, Express.Js, TypeScript, TypeORM, dotenv, nodemon, sucrase
 
 Siga os passos a seguir para rodar localmente:
 
